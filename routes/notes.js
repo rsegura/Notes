@@ -35,5 +35,29 @@ router.get('/view', async (req, res, next) =>{
 	});
 });
 
+router.get('/edit', async (req, res, next) =>{
+	var note = await notes.read(req.query.key);
+	res.render('noteedit', {
+		title: note ? ("Edit " + note.title) : "Add a Note",
+		docreate: false,
+		notekey: req.query.key,
+		note: note
+	});
+});
+
+router.get('/destroy', async (req, res, next) =>{
+	var note = await notes.read(req.query.key);
+	res.render('notedestroy', {
+		title: note ? note.title : "",
+		notekey: req.query.key,
+		note: note
+	});
+});
+
+router.post('/destroy/confirm', async (req, res, next) =>{
+	await notes.destroy(req.body.notekey);
+	res.redirect('/');
+})
+
 
 module.exports = router;
